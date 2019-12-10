@@ -1,2 +1,2 @@
-CFLAGS=-Wall
+CFLAGS=-Wall -O3
 LDLIBS=-lm
