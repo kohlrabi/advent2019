@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <math.h>
 
 #define SIZE (1024*1024*20)
 
@@ -32,14 +31,17 @@ int run_program(int *a, int input)
 		/* extract mode flags
 		 * 0: position mode
 		 * 1: immediate mode
+		 *
+		 * we only need to extract the first two mode flags,
+		 * the third parameter is always positional
 		 */
-		for(j=1; j<3; j++) {
-			mode = (int)(a[i]/pow(10, j+1)) % (int)pow(10, j);
+		for(j=0; j<2; j++) {
+			mode = j == 0 ? (a[i] / 100) % 10 : (a[i] / 1000) % 10;
 			if(mode) {
-				ops[j-1] = a[i+j];
+				ops[j] = a[i+j+1];
 			}
 			else {
-				ops[j-1] = a[a[i+j]];
+				ops[j] = a[a[i+j+1]];
 			}
 		}
 		/* run program */
