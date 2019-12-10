@@ -2,15 +2,16 @@
 
 CFLAGS=-Wall -O3
 
-all:
-	make `ls *.c | sed 's/\.c//'`
+BINS=`ls *.c | sed 's/\.c//'`
 
+all:
+	make $(BINS)
 clean:
-	rm `ls *.c | sed 's/\.c//'`
+	rm $(BINS)
 
 run: all
 	@echo
-	@for i in `ls *.c | sed 's/\.c//'`; do \
+	@for i in $(BINS); do \
 		echo "$$i"; \
 		echo "----------------"; \
 		./$$i < ../input/$$i.input; \
