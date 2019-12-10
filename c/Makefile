@@ -7,3 +7,12 @@ all:
 
 clean:
 	rm `ls *.c | sed 's/\.c//'`
+
+run: all
+	@echo
+	@for i in `ls *.c | sed 's/\.c//'`; do \
+		echo "$$i"; \
+		echo "----------------"; \
+		./$$i < ../input/$$i.input; \
+		echo; \
+	done;
