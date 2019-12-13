@@ -7,10 +7,10 @@ int part1(int m)
 
 int part2(int m)
 {
-	int t = m, sum = 0;
+	int sum = 0;
 
-	while((t = part1(t)) > 0) {
-		sum += t;
+	while((m = part1(m)) > 0) {
+		sum += m;
 	}
 	return sum;
 }
