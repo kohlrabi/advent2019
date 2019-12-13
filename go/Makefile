@@ -1,9 +1,11 @@
 .PHONY: all
 
 BUILD=go build
+
 RUN=go run
 
 BINS=`ls *.go | sed 's/\.go//'`
+
 
 all:
 	@for i in $(BINS); do \

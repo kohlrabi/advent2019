@@ -4,8 +4,10 @@ CFLAGS=-Wall -O3
 
 BINS=`ls *.c | sed 's/\.c//'`
 
+
 all:
 	make $(BINS)
+
 clean:
 	rm $(BINS)
 
