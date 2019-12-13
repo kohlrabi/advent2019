@@ -13,7 +13,7 @@ all:
 	done;
 
 clean:
-	rm $(BINS)
+	rm -f $(BINS)
 
 run:
 	@echo

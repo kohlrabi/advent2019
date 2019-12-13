@@ -9,7 +9,7 @@ all:
 	make $(BINS)
 
 clean:
-	rm $(BINS)
+	rm -f $(BINS)
 
 run: all
 	@echo
