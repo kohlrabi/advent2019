@@ -42,12 +42,49 @@ func part1(a [][][]int) int {
 	return ones * twos
 }
 
-func readImageData() [][][]int {
+func part2(a [][][]int) {
+
+	height := len(a[0])
+	width := len(a[0][0])
+
+	image := make([][]int, height)
+
+	for i := range image {
+		image[i] = make([]int, width)
+	}
+
+	for i, v := range image {
+		for j := range v {
+			image[i][j] = 2
+		}
+	}
+
+	for _, v := range a {
+		for j, w := range v {
+			for k, x := range w {
+				if image[j][k] == 2 {
+					image[j][k] = x
+				}
+			}
+		}
+	}
+
+	for _, v := range image {
+		for _, w := range v {
+			if w == 0 {
+				fmt.Printf(" ")
+			} else {
+				fmt.Printf("*")
+			}
+		}
+		fmt.Printf("\n")
+	}
+
+}
+
+func readImageData(height int, width int) [][][]int {
 	var c int
 	var fin bool
-
-	const width = 25
-	const height = 6
 
 	a := make([][][]int, 1)
 
@@ -73,7 +110,12 @@ func readImageData() [][][]int {
 }
 
 func main() {
-	a := readImageData()
+	const height = 6
+	const width = 25
+
+	a := readImageData(height, width)
 
 	fmt.Printf("part1: %d\n", part1(a))
+	fmt.Printf("part2:\n")
+	part2(a)
 }
