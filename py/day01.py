@@ -16,13 +16,10 @@ def part2(m):
     return s
 
 def main():
-    total = 0
-    total_fuel = 0
 
-    for line in fileinput.input():
-        m = int(line)
-        total += part1(m)
-        total_fuel += part2(m)
+    d = [int(line) for line in fileinput.input()]
+    total = sum(map(part1, d))
+    total_fuel = sum(map(part2, d))
 
     print(f'part1: {total}')
     print(f'part2: {total_fuel}')
