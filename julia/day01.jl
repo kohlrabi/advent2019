@@ -1,3 +1,5 @@
+#!/usr/bin/env julia
+
 function part1(m)::Int
     m ÷ 3 - 2
 end
