@@ -14,17 +14,12 @@ function part2(m)::Int
     return s
 end
 
-total = 0
-total_fuel = 0
+d = [parse(Int, x) for x in readlines()]
 
-for line in readlines()
-    m = parse(Int, line)
-    global total += part1(m)
-    global total_fuel += part2(m)
-end
+total = sum(part1, d)
+total_fuel = sum(part2, d)
 
 
 using Printf
-
 @printf("part1: %d\n", total)
 @printf("part2: %d\n", total_fuel)
