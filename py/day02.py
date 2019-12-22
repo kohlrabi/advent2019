@@ -6,9 +6,14 @@ from collections import UserDict
 
 
 class Intcode(UserDict):
-    
+    """
+    Intcode processor for day 2 of AoC 2019
+    """
     
     def __register_opcodes(self):
+        """
+        Register all the opcodes of the Intcode processor
+        """
         self.opcodes = {
             1: self.op_add,
             2: self.op_multiply,
@@ -16,9 +21,12 @@ class Intcode(UserDict):
         }
     
     def __init__(self, regs={}):
+        # we copy the input dict to ensure it is not changed
         try:
+            # is this a dict?
             self.data = {k: v for k, v in regs.items()}
         except AttributeError:
+            # Not a dict, but a list or tuple
             self.data = {i: reg for i, reg in enumerate(regs)}
         self.__register_opcodes()
                  
