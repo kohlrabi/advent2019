@@ -42,16 +42,19 @@ class Intcode(UserDict):
              
     def op_fini(self):
         raise StopIteration
+    
+    def __next__(self):
+        opcode = self.opcodes[self[self.cur]]
+        self.cur += 1
+        self.cur += opcode()
+        
+    def __iter__(self):
+        self.cur = 0
+        return self
         
     def run(self):
-        self.cur = 0
-        try:
-            while True:
-                opcode = self.opcodes[self[self.cur]]
-                self.cur += 1 # opcode read, advance by 1
-                self.cur += opcode() # run the operation
-        except StopIteration:
-            return
+        for _ in self:
+            pass
         
     def copy(self):
         return Intcode(self.data)
