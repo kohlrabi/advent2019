@@ -81,7 +81,7 @@ class Edge:
         od = other.direction
         odn = other.direction.normed()
 
-        if sdn @ odn != 0 or so == oo:
+        if sdn @ odn != 0:
             return None
 
         if sdn.y == 0: # x, y case
@@ -94,7 +94,8 @@ class Edge:
         if v < 0 or w < 0 or v > sd.magnitude() or w > od.magnitude():
             return None
         else:
-            return so + sdn * v
+            inter = so + sdn * v
+            return inter if inter != Vector() else None
 
     def __str__(self):
         return f'Edge ({self.origin} + {self.direction}'
