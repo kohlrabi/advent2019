@@ -132,7 +132,24 @@ def part1(wires):
                 else:
                     min_inter = min_inter if min_inter < inter.manhattan() else inter.manhattan()
     return min_inter
-                
+
+def part2(wires):
+    min_length = None
+    i_length = 0
+    for i in wires[0]:
+        j_length = 0
+        for j in wires[1]:
+            inter = i.intersection(j)
+            if inter is not None:
+                new_length = i_length + j_length + (inter-i.origin).magnitude() + (inter-j.origin).magnitude()
+                if min_length is None:
+                    min_length = new_length
+                else:
+                    min_length = min_length if min_length < new_length else new_length
+            j_length += j.direction.magnitude()
+        i_length += i.direction.magnitude()
+    return min_length
+                    
 
 def main():
     wires = []
@@ -145,6 +162,7 @@ def main():
         wires.append(w)
         
     print('part1: {}'.format(part1(wires)))
+    print('part2: {}'.format(part2(wires)))
     
 
 if __name__ == '__main__':
