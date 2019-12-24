@@ -98,7 +98,7 @@ class Edge:
             return None
         else:
             inter = so + sdn * v
-            return inter if inter != Vector() else None
+            return inter if abs(inter) else None
 
     def __str__(self):
         return f'Edge ({self.origin} + {self.direction}'
