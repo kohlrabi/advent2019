@@ -27,8 +27,11 @@ class Vector:
     def magnitude(self):
         return int(round((self.x**2 + self.y**2)**0.5))
 
+    def __abs__(self):
+        return self.magnitude()
+
     def normed(self):
-        return Vector(self.x // self.magnitude(), self.y // self.magnitude())
+        return Vector(self.x // abs(self), self.y // abs(self))
 
     def __eq__(self, other):
         return self.eq(other)
@@ -91,7 +94,7 @@ class Edge:
             v = (oo.y - so.y) // sdn.y
             w = (so.x - oo.x) // odn.x
 
-        if v < 0 or w < 0 or v > sd.magnitude() or w > od.magnitude():
+        if v < 0 or w < 0 or v > abs(sd) or w > abs(od):
             return None
         else:
             inter = so + sdn * v
@@ -133,7 +136,7 @@ def part1(wires):
 
 def part2(wires):
     # this can be written nicely in Python 3.8, using assignment expressions
-    min_length = min(li + lj + (i.intersection(j) - i.origin).magnitude() + (i.intersection(j) - j.origin).magnitude()
+    min_length = min(li + lj + abs(i.intersection(j) - i.origin) + abs(i.intersection(j) - j.origin)
                      for (i, li), (j, lj) in itertools.product(*wires) if i.intersection(j) is not None)
     return min_length
 
