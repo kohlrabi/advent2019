@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import fileinput
-
+import itertools
 
 class Vector:
 
@@ -104,6 +104,8 @@ class Wire:
 
     def __init__(self):
         self.edges = []
+        self.lengths = []
+        self.length = 0
 
     def walk(self, direction, length):
         if not self.edges:
@@ -112,6 +114,8 @@ class Wire:
             origin = self.edges[-1].origin + self.edges[-1].direction
         dirvec = Vector.from_direction(direction, length)
         self.edges.append(Edge(origin, dirvec))
+        self.lengths.append(self.length)
+        self.length += length
 
     def __str__(self):
         s = 'Wire: '
@@ -119,36 +123,18 @@ class Wire:
         return s
 
     def __iter__(self):
-        return iter(self.edges)
+        return iter(zip(self.edges, self.lengths))
 
 
 def part1(wires):
-    min_inter = None
-    for i in wires[0]:
-        for j in wires[1]:
-            inter = i.intersection(j)
-            if inter is not None:
-                if min_inter is None:
-                    min_inter = inter.manhattan()
-                else:
-                    min_inter = min_inter if min_inter < inter.manhattan() else inter.manhattan()
+    # this can be written nicely in Python 3.8, using assignment expressions
+    min_inter = min(i.intersection(j).manhattan() for (i, _), (j, _) in itertools.product(*wires) if i.intersection(j) is not None)
     return min_inter
 
 def part2(wires):
-    min_length = None
-    i_length = 0
-    for i in wires[0]:
-        j_length = 0
-        for j in wires[1]:
-            inter = i.intersection(j)
-            if inter is not None:
-                new_length = i_length + j_length + (inter-i.origin).magnitude() + (inter-j.origin).magnitude()
-                if min_length is None:
-                    min_length = new_length
-                else:
-                    min_length = min_length if min_length < new_length else new_length
-            j_length += j.direction.magnitude()
-        i_length += i.direction.magnitude()
+    # this can be written nicely in Python 3.8, using assignment expressions
+    min_length = min(li + lj + (i.intersection(j) - i.origin).magnitude() + (i.intersection(j) - j.origin).magnitude()
+                     for (i, li), (j, lj) in itertools.product(*wires) if i.intersection(j) is not None)
     return min_length
 
 
