@@ -53,8 +53,11 @@ class Vector:
     def __mul__(self, other):
         return self.mul(other)
 
-    def manhattan(self):
-        return abs(self.x) + abs(self.y)
+    def manhattan(self, other=None):
+        if other is None:
+            other = Vector(0, 0)
+        ref = other - self
+        return abs(ref.x) + abs(ref.y)
 
     @classmethod
     def from_direction(cls, direction, length):
