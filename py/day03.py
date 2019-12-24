@@ -9,49 +9,31 @@ class Vector:
         self.x = x
         self.y = y
 
-    def add(self, other):
+    def __add__(self, other):
         return Vector(self.x + other.x, self.y + other.y)
 
-    def __add__(self, other):
-        return self.add(other)
-
-    def sub(self, other):
+    def __sub__(self, other):
         return Vector(self.x - other.x, self.y - other.y)
 
-    def __sub__(self, other):
-        return self.sub(other)
-
-    def eq(self, other):
+    def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
-    def magnitude(self):
-        return int(round((self.x**2 + self.y**2)**0.5))
-
     def __abs__(self):
-        return self.magnitude()
-
-    def normed(self):
-        return Vector(self.x // abs(self), self.y // abs(self))
-
-    def __eq__(self, other):
-        return self.eq(other)
+        return int(round((self.x**2 + self.y**2)**0.5))
 
     def __neg__(self):
         return Vector(-self.x, -self.y)
 
-    def scalar(self, other):
+    def __matmul__(self, other):
         return self.x * other.x + self.y * other.y
 
-    def __matmul__(self, other):
-        return self.scalar(other)
-
-    def mul(self, other):
+    def __mul__(self, other):
         if isinstance(other, Vector):
             return Vector(self.x * other.x, self.y * other.y)
         return Vector(self.x * other, self.y * other)
 
-    def __mul__(self, other):
-        return self.mul(other)
+    def normed(self):
+        return Vector(self.x // abs(self), self.y // abs(self))
 
     def manhattan(self, other=None):
         if other is None:
