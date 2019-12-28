@@ -24,7 +24,7 @@ class Intcode(Intcode5):
         })
         
     def _op_relbase(self, opers):
-        self.relbase = opers[0]
+        self.relbase += opers[0]
         return 1
 
 
