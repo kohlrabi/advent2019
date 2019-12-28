@@ -14,7 +14,7 @@ class Intcode(Intcode5):
     def __register_modes(self):
         super().__register_modes()
         self.__modes.update({
-            2: lambda i: self[self[self.cur+i]+self.relbase]
+            2: lambda i: self[self.cur+i]+self.relbase
         })
         
     def __register_opcodes(self):
@@ -24,9 +24,9 @@ class Intcode(Intcode5):
         })
         
     def _op_relbase(self, opers):
-        self.relbase += opers[0]
+        self.relbase += self[opers[0]]
         return 1
-
+    
 
 def main():
     regs = list(map(int, next(fileinput.input()).split(',')))
@@ -34,7 +34,7 @@ def main():
     a = Intcode(regs)
     b = a.copy()
 
-    a = a(1)
+    a = a(1)[-1]
     print(f'part1: {a}')
     #b = b(5)
     #print(f'part2: {b}')

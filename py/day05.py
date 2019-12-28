@@ -23,8 +23,8 @@ class Intcode(Intcode2):
         
     def __register_modes(self):
         self.__modes = {
-            0: lambda i: self[self[self.cur+i]],
-            1: lambda i: self[self.cur+i],
+            0: lambda i: self[self.cur+i],
+            1: lambda i: self.cur+i,
         }
 
     def __init__(self, regs={}, input=0):
@@ -43,7 +43,9 @@ class Intcode(Intcode2):
         op = self[self.cur]
         opcode = op%100
         opcode = self.__opcodes[opcode]
-        modes = ((op//100)%10, (op//1000)%10,)
+        modes = []
+        for i in range(2, 5):
+            modes.append((op//(10**i))%10)
         self.cur += 1
         opers = self._select_mode(modes)
         shift = opcode(opers)
@@ -56,44 +58,39 @@ class Intcode(Intcode2):
         return self.output
 
     def _op_add(self, opers):
-        cur = self.cur
-        self[self[cur+2]] = opers[0] + opers[1]
+        self[opers[2]] = self[opers[0]] + self[opers[1]]
         return 3
 
     def _op_mul(self, opers):
-        cur = self.cur
-        self[self[cur+2]] = opers[0] * opers[1]
+        self[opers[2]] = self[opers[0]] * self[opers[1]]
         return 3
 
     def _op_inp(self, opers):
-        cur = self.cur
-        self[self[cur]] = self.input
+        self[opers[0]] = self.input
         return 1
 
     def _op_outp(self, opers):
-        self.output.append(opers[0])
+        self.output.append(self[opers[0]])
         return 1
 
     def _op_jnz(self, opers):
-        if opers[0] != 0:
-            self.cur = opers[1]
+        if self[opers[0]] != 0:
+            self.cur = self[opers[1]]
             return 0
         return 2
 
     def _op_jez(self, opers):
-        if opers[0] == 0:
-            self.cur = opers[1]
+        if self[opers[0]] == 0:
+            self.cur = self[opers[1]]
             return 0
         return 2
     
     def _op_slt(self, opers):
-        cur = self.cur
-        self[self[cur+2]] = 1 if opers[0] < opers[1] else 0
+        self[opers[2]] = 1 if self[opers[0]] < self[opers[1]] else 0
         return 3
     
     def _op_seq(self, opers):
-        cur = self.cur
-        self[self[cur+2]] = 1 if opers[0] == opers[1] else 0
+        self[opers[2]] = 1 if self[opers[0]] == self[opers[1]] else 0
         return 3
     
     def __call__(self, input=0):
