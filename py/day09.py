@@ -36,8 +36,8 @@ def main():
 
     a = a(1)[-1]
     print(f'part1: {a}')
-    #b = b(5)
-    #print(f'part2: {b}')
+    b = b(2)[-1]
+    print(f'part2: {b}')
 
 if __name__ == '__main__':
     main()
