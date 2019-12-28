@@ -13,8 +13,8 @@ class Intcode(Intcode2):
         self.__opcodes.update({
             1: self._op_add,
             2: self._op_mul,
-            3: self._op_inp,
-            4: self._op_outp,
+            3: self._op_input,
+            4: self._op_output,
             5: self._op_jnz,
             6: self._op_jez,
             7: self._op_slt,
@@ -51,8 +51,11 @@ class Intcode(Intcode2):
         shift = opcode(opers)
         self.cur += shift
 
-    def run(self, input=0):
-        self.input = input
+    def run(self, input=[]):
+        try:
+            self.input = list(input)
+        except TypeError:
+            self.input = [input,]
         self.output = []
         consume_iter(self)
         return self.output
@@ -65,11 +68,11 @@ class Intcode(Intcode2):
         self[opers[2]] = self[opers[0]] * self[opers[1]]
         return 3
 
-    def _op_inp(self, opers):
-        self[opers[0]] = self.input
+    def _op_input(self, opers):
+        self[opers[0]] = self.input.pop(0)
         return 1
 
-    def _op_outp(self, opers):
+    def _op_output(self, opers):
         self.output.append(self[opers[0]])
         return 1
 
