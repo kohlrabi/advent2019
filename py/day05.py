@@ -1,4 +1,9 @@
+#!/usr/bin/env python3
+
+import fileinput
+
 from day02 import Intcode as Intcode2
+from day02 import consume_iter
 
 class Intcode(Intcode2):
 
@@ -6,67 +11,96 @@ class Intcode(Intcode2):
         super().__register_opcodes()
 
         self.opcodes.update({
-            3: self.op_inp,
-            4: self.op_outp,
-            5: self.op_jnz,
-            6: self.op_jez,
-            7: self.op_slt;
-            8: self.op_seq;
+            1: self._op_add,
+            2: self._op_mul,
+            3: self._op_inp,
+            4: self._op_outp,
+            5: self._op_jnz,
+            6: self._op_jez,
+            7: self._op_slt,
+            8: self._op_seq,
         })
 
-    def __init__(self, regs={}, input=None):
+    def __init__(self, regs={}, input=0):
         super().__init__(regs)
         self.input = input
 
     def __next__(self):
         op = self[self.cur]
-        opcode = op%10
+        opcode = op%100
         opcode = self.opcodes[opcode]
         modes = ((op//100)%10, (op//1000)%10,)
         self.cur += 1
         opers = []
         for i, mode in enumerate(modes):
-            if mode:
-                opers.append(self.cur+i)
-            else:
+            if mode == 1:
                 opers.append(self[self.cur+i])
-        self.cur += opcode(opers)
+            else:
+                opers.append(self[self[self.cur+i]])
+        shift = opcode(opers)
+        self.cur += shift
 
-    def run(self, input=None):
+    def run(self, input=0):
         self.input = input
-        for _ in self:
-            pass
+        consume_iter(self)
         return self.output
 
-    def op_add(self, opers):
+    def _op_add(self, opers):
+        cur = self.cur
         self[self[cur+2]] = opers[0] + opers[1]
         return 3
 
-    def op_multiply(self, opers):
+    def _op_mul(self, opers):
         cur = self.cur
         self[self[cur+2]] = opers[0] * opers[1]
         return 3
 
-    def op_inp(self, opers):
+    def _op_inp(self, opers):
         cur = self.cur
-        self[self[cur+1]] = self.input
+        self[self[cur]] = self.input
         return 1
 
-    def op_outp(self, opers):
+    def _op_outp(self, opers):
         cur = self.cur
-        self.output = self[cur]
+        self.output = opers[0]
         return 1
 
-    def op_jez(self, opers):
-        cur = self.cur
-        if not opers[0]:
+    def _op_jnz(self, opers):
+        if opers[0] != 0:
             self.cur = opers[1]
-            return 0;
+            return 0
         return 2
 
-    def op_jnz(self, opers):
-        cur = self.cur
-        if opers[0]:
+    def _op_jez(self, opers):
+        if opers[0] == 0:
             self.cur = opers[1]
-            return 0;
+            return 0
         return 2
+    
+    def _op_slt(self, opers):
+        cur = self.cur
+        self[self[cur+2]] = 1 if opers[0] < opers[1] else 0
+        return 3
+    
+    def _op_seq(self, opers):
+        cur = self.cur
+        self[self[cur+2]] = 1 if opers[0] == opers[1] else 0
+        return 3
+    
+    def __call__(self, input=0):
+        return self.run(input)
+        
+
+def main():
+    regs = list(map(int, next(fileinput.input()).split(',')))
+
+    a = Intcode(regs)
+    b = a.copy()
+
+    a = a(1)
+    print(f'part1: {a}')
+    b = b(5)
+    print(f'part2: {b}')
+
+if __name__ == '__main__':
+    main()
