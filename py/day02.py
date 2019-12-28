@@ -43,7 +43,7 @@ class Intcode(UserDict):
         An opcode has to return the number of registers the processing pointer has to advance,
         usually this will be the amount of operands consumed by the opcode.
         """
-        self.opcodes = {
+        self.__opcodes = {
             1: self._op_add,
             2: self._op_mul,
             99: self._op_halt,
@@ -90,7 +90,7 @@ class Intcode(UserDict):
         """
         Processes the next opcode
         """
-        opcode = self.opcodes[self[self.cur]]
+        opcode = self.__opcodes[self[self.cur]]
         self.cur += 1
         self.cur += opcode()
 
