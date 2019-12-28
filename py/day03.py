@@ -4,38 +4,68 @@ import fileinput
 import itertools
 
 class Vector:
+    """
+    Class representing a 2D vector. We could use numpy, but that is a bit unneccesary for this
+    """
 
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
 
     def __add__(self, other):
+        """
+        Add two Vectors
+        """
         return Vector(self.x + other.x, self.y + other.y)
 
     def __sub__(self, other):
+        """
+        Subtract two Vectors
+        """
         return Vector(self.x - other.x, self.y - other.y)
 
     def __eq__(self, other):
+        """
+        Check whether two Vectors are equal
+        """
         return self.x == other.x and self.y == other.y
 
     def __abs__(self):
+        """
+        Return the norm of a Vector, as integer
+        """
         return int(round((self.x**2 + self.y**2)**0.5))
 
     def __neg__(self):
+        """
+        Negate a Vector
+        """
         return Vector(-self.x, -self.y)
 
     def __matmul__(self, other):
+        """
+        Scalar product of two Vectors
+        """
         return self.x * other.x + self.y * other.y
 
     def __mul__(self, other):
+        """
+        Element-wise multiplication with a Vector or a scalar
+        """
         if isinstance(other, Vector):
             return Vector(self.x * other.x, self.y * other.y)
         return Vector(self.x * other, self.y * other)
 
     def normed(self):
+        """
+        Return a normed Vector
+        """
         return Vector(self.x // abs(self), self.y // abs(self))
 
     def manhattan(self, other=None):
+        """
+        Compute the Manhattan distance to a reference Vector, or the origin if `None`
+        """
         if other is None:
             other = Vector(0, 0)
         ref = other - self
@@ -43,6 +73,9 @@ class Vector:
 
     @classmethod
     def from_direction(cls, direction, length):
+        """
+        Create a new Vector from a direction character and a length
+        """
         new = cls(*{
             'L': (-length, 0),
             'R': (length, 0),
@@ -56,12 +89,23 @@ class Vector:
 
 
 class Edge:
+    """
+    Class representing a single edge of the Wire
+    
+    Each Edge consists of a origin Vector and a direction Vector
+    """
 
     def __init__(self, origin=Vector(), direction=Vector()):
         self.origin = origin
         self.direction = direction
 
     def intersection(self, other):
+        """
+        Checks an Edge for intersection with another Edge
+        
+        If no intersection is found, return None,
+        Else return the intersection point as a Vector
+        """
         so = self.origin
         sd = self.direction
         sdn = self.direction.normed()
@@ -89,6 +133,11 @@ class Edge:
         return f'Edge ({self.origin} + {self.direction}'
 
 class Wire:
+    """
+    Class representing a full Wire.
+    
+    A Wire consists of multiple Edges
+    """
 
     def __init__(self):
         self.edges = []
@@ -96,6 +145,9 @@ class Wire:
         self.length = 0
 
     def walk(self, direction, length):
+        """
+        Add a new Edge by walking the wire into a direction by length units
+        """
         if not self.edges:
             origin = Vector()
         else:
