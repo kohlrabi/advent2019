@@ -11,26 +11,28 @@ enum IntcodeError {
     InvalidOpcode,
 }
 
+fn intcode_add(code: &mut Vec<i32>, offset: usize) -> usize {
+    let target = code[offset + 3] as usize;
+    let result = code[code[offset + 1] as usize] + code[code[offset + 2] as usize];
+    code[target] = result;
+    offset + 4
+}
+
+fn intcode_mul(code: &mut Vec<i32>, offset: usize) -> usize {
+    let target = code[offset + 3] as usize;
+    let result = code[code[offset + 1] as usize] * code[code[offset + 2] as usize];
+    code[target] = result;
+    offset + 4
+}
+
 fn run_intcode(code: &mut Vec<i32>) -> Result<i32, IntcodeError> {
     let mut i = 0;
-    let mut target;
-    let mut result;
-    let mut op;
+
     loop {
-        op = code[i];
+        let op = code[i];
         match op {
-            op if op == IntcodeOp::Add as i32 => {
-                target = code[i + 3] as usize;
-                result = code[code[i + 1] as usize] + code[code[i + 2] as usize];
-                code[target] = result;
-                i += 4;
-            }
-            op if op == IntcodeOp::Mul as i32 => {
-                target = code[i + 3] as usize;
-                result = code[code[i + 1] as usize] * code[code[i + 2] as usize];
-                code[target] = result;
-                i += 4;
-            }
+            op if op == IntcodeOp::Add as i32 => i = intcode_add(code, i),
+            op if op == IntcodeOp::Mul as i32 => i = intcode_mul(code, i),
             op if op == IntcodeOp::Stop as i32 => return Ok(code[0]),
             _ => return Err(IntcodeError::InvalidOpcode),
         }
